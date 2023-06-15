@@ -76,11 +76,17 @@ WSGI_APPLICATION = 'canesgrill.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bd_churras',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+        'OPCTIONS' : {
+            'init_command':"SET sql_mode='STRICT_TRANS_TABLE'"
+        }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -119,8 +125,8 @@ USE_TZ = True
 
 STATIC_ROOT = BASE_DIR / 'static'
 STATIC_URL = 'static/'
-STATICFILES_DIR = [
-    BASE_DIR / 'template/static',
+STATICFILES_DIRS = [
+    BASE_DIR / 'templates/static',
 
 ]
 
