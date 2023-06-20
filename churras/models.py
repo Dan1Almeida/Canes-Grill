@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from pessoas.models import Pessoa
 
 
 
@@ -9,7 +10,7 @@ from datetime import datetime
 
 class Prato(models.Model):
     #Atributos da Classe
-
+    pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
     nome_prato = models.CharField(
         max_length=100,
         verbose_name= "Nome do prato"
@@ -31,10 +32,16 @@ class Prato(models.Model):
         max_length=100,
         verbose_name= "Categoria"
         )
-    date_prato = models.DateTimeField(
+    date_prato = models.DateTimeField( 
         default=datetime.now,
         blank = True
         )
+    publicado = models.BooleanField(default=False)
+
+    foto_prato = models.ImageField(
+        upload_to = 'pratos/%Y/%m',
+        blank = True,
+    )
     
     def __str__(self):
         return self.nome_prato

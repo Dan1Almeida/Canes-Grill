@@ -5,13 +5,13 @@ from .models import Prato
 
 
 def index(request):
-    pratos = Prato.objects.all()
-
+    pratos = Prato.objects.filter(publicado= True).order_by('date_prato') #o que mostra na página inicial
 
     contexto = {
         'lista_pratos': pratos,
 
-    }
+    } # o que lista o prato
+
 
     return render(request, 'index.html', contexto)
 

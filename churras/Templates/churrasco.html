@@ -48,9 +48,10 @@
                     <span>{{ prato.date_prato }}</span>
                     <h2>{{ prato.nome_prato }}</h2>
                     <div class="receipe-duration">
-                        <h6>{{ prato.tempo_preparo }} de tempo de preparo</h6>
-                        <h6>{{ prato.rendimento }} Porções</h6>
+                        <h6>Preparo: {{ prato.tempo_preparo }} de tempo de preparo</h6>
+                        <h6>Rendimento: {{ prato.rendimento }} Porções</h6>
                         <h6>Categoria {{ prato.categoria }}</h6>
+                        <h6>Por: {{ prato.pessoa }}</h6>
                     </div>
                 </div>
             </div>
