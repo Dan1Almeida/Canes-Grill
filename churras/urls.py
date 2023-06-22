@@ -7,4 +7,6 @@ urlpatterns = [
 
     path('', views.index, name ='index'),
     path('<int:prato_id>', views.churrasco, name ='churrasco'),
+    path('buscar/', views.buscar, name ='buscar'),
+    
 ]
