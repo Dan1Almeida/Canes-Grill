@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
+from churras.models import Prato
+
 # Create your views here.
 
 def cadastro(request):
     # print(f'Method: {request.method}')
     if request.method == 'POST':
-        # print(f'POST: {request.POST}')
+        # print(f'POST: {request.POST}') ENTENDER FUNCIONAMENTOS
 
         nome = request.POST['nome']
         email = request.POST['email']
@@ -34,7 +36,8 @@ def cadastro(request):
             return redirect('cadastro')    
 
         user = User.objects.create_user(username=nome,email=email,password=senha)
-        # user.save
+        user.save
+
         print('Usuario Cadastrado com Sucesso')     
         return redirect('login')
     
@@ -71,11 +74,53 @@ def login(request):
 
 
 def dashboard(request):
-    return render(request,'dashboard.html')
+    if request.user.is_authenticated:
+        pratos = Prato.objects.filter(publicado= True).order_by('date_prato')
+        contexto = {'lista_pratos': pratos,}
+        return render(request,'dashboard.html',contexto)
+    
+    return redirect('index')
 
 
 
 def logout(request):
     auth.logout(request)
     print('Você desconectou')
-    return redirect('index.htm')
+    return redirect('index')
+
+
+def cria_prato(request):
+    if request.method == 'POST':
+        nome_prato = request.POST['nome_prato']
+        ingredientes = request.POST['ingredientes']
+        modo_preparo = request.POST['modo_preparo']
+        tempo_preparo = request.POST['tempo_preparo']
+        rendimento = request.POST['rendimento']
+        categoria = request.POST['categoria']
+
+        if not nome_prato: 
+            print('O campo nome não pode ficar em branco')
+            return redirect('cria_prato')
+        
+        if not ingredientes: 
+            print('O campo nome não pode ficar em branco')
+            return redirect('cria_prato')
+        
+        if not modo_preparo: 
+            print('O campo nome não pode ficar em branco')
+            return redirect('cria_prato')
+        
+        if not tempo_preparo: 
+            print('O campo nome não pode ficar em branco')
+            return redirect('cria_prato')
+        
+        if not rendimento: 
+            print('O campo nome não pode ficar em branco')
+            return redirect('cria_prato')
+        
+        if not categoria: 
+            print('O campo nome não pode ficar em branco')
+            return redirect('cria_prato')
+
+
+    return render(request,'cria_prato.html')

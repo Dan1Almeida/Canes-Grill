@@ -1,1 +1,42 @@
-<h1>dashboard</h1>
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block titulo%} Dashboard {% endblock %}
+
+{% block conteudo %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="section-heading">
+                <h3>Olá, {{ user.username}}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Single Best Receipe Area -->
+        {% for prato in lista_pratos %}
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="single-best-receipe-area mb-30">
+                {% if prato.foto_prato %}
+                <img src="{{prato.foto_prato.url}}" alt="">
+                {% else %}
+                <img src="{% static 'img/bg-img/foto_receita.png' %}" alt="">
+                {% endif %}
+                <div class="receipe-content">
+                    <a href="{% url 'churrasco' prato.id %}">
+                        <h5>{{ prato.nome_prato }}</h5>
+                        <h5>{{ prato.categoria }}</h5>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12"> Não Há Pratos a Serem Mostrado</div>        
+        {%endfor%}
+    </div>
+</div>
+
+{%endblock%}
