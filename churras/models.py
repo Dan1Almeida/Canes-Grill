@@ -1,6 +1,8 @@
 from django.db import models
 from datetime import datetime
 from pessoas.models import Pessoa
+from django.contrib.auth.models import User
+
 
 
 
@@ -10,7 +12,7 @@ from pessoas.models import Pessoa
 
 class Prato(models.Model):
     #Atributos da Classe
-    pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
+    pessoa = models.ForeignKey(User, on_delete=models.CASCADE)
     nome_prato = models.CharField(
         max_length=100,
         verbose_name= "Nome do prato"
@@ -43,10 +45,10 @@ class Prato(models.Model):
         blank = True,
     )
     
-    def __str__(self):
+    def __str__(self): #Retorna o Nome do Prato
         return self.nome_prato
     
-    class Meta:
+    class Meta: 
         verbose_name='Prato'
         verbose_name_plural ='Pratos'
     

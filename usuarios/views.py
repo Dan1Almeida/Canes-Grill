@@ -1,9 +1,16 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from django.contrib import auth
+from django.contrib import auth, messages
 from churras.models import Prato
 
 # Create your views here.
+
+def campo_vazio(campo):
+    return not campo.strip()
+
+def senha_nao_iguais(senha,senha2):
+    return senha != senha2
+
 
 def cadastro(request):
     # print(f'Method: {request.method}')
@@ -15,30 +22,30 @@ def cadastro(request):
         senha = request.POST['senha']
         senha2 = request.POST['senha2']
 
-        if not nome.strip(): 
-            print('O campo nome não pode ficar em branco')
+        if campo_vazio(nome):
+            messages.error(request,"O campo nome não pode ficar em branco") 
             return redirect('cadastro')
         
-        if not email.strip():
-            print('O campo Email não pode ficar em branco')
+        if campo_vazio(email):
+            messages.error(request,"O campo Email não pode ficar em branco")
             return redirect('cadastro')
 
-        if senha != senha2 or not senha.strip() or not senha2.strip():
-            print('As senhas não Correspondem')
+        if senha_nao_iguais(senha,senha2) or campo_vazio(senha) or campo_vazio(senha2):
+            messages.error(request,"As senhas não Correspondem ou o Campos está vazio ")
             return redirect('cadastro')    
 
         if User.objects.filter(email=email).exists():
-            print('E-mail ja cadastrado')
+            messages.error(request,"E-mail já cadastrado")
             return redirect('cadastro') 
            
         if User.objects.filter(username=nome).exists():
-            print('Usuario ja cadastrado')
+            messages.error(request,"Usuário já cadastrado")
             return redirect('cadastro')    
 
         user = User.objects.create_user(username=nome,email=email,password=senha)
         user.save
 
-        print('Usuario Cadastrado com Sucesso')     
+        messages.error(request,"Usuário cadastrado com sucesso")     
         return redirect('login')
     
     return render(request,'cadastro.html')
@@ -47,13 +54,13 @@ def cadastro(request):
 
 def login(request):
 
-    if request.method == 'POST':
+    if request.method=='POST':
 
-        email = request.POST['email'].strip()
-        senha = request.POST['senha'].strip()
+        email=request.POST['email']
+        senha=request.POST['senha']
 
-        if email == " " and senha == " ":
-            print('Campos Vazios')
+        if email == "" and senha == "":
+            messages.error(request,"os campos Não podem ficar vazios")
             return redirect('login') 
         
         print(email, senha)
@@ -64,63 +71,63 @@ def login(request):
 
             if user is not None:
                 auth.login(request, user)
-                print('Login realizado com sucesso')
+                messages.success(request,"Login realizado com sucesso")
                 return redirect('dashboard')
 
-            print('Usuário e/ou senha inválidos')
-            return redirect('login')
+        messages.error(request,"Usuário/Senha Inválido")
+        return redirect('login')
 
     return render(request,'login.html')
 
 
 def dashboard(request):
     if request.user.is_authenticated:
-        pratos = Prato.objects.filter(publicado= True).order_by('date_prato')
+        pratos = Prato.objects.filter(pessoa=request.user.id).order_by('date_prato')
         contexto = {'lista_pratos': pratos,}
         return render(request,'dashboard.html',contexto)
     
+    messages.error(request,"Você não tem permissão para acessar a dashboard")
     return redirect('index')
 
 
 
 def logout(request):
     auth.logout(request)
-    print('Você desconectou')
+
+    messages.success(request,"Você se Desconectou")
     return redirect('index')
 
 
 def cria_prato(request):
-    if request.method == 'POST':
-        nome_prato = request.POST['nome_prato']
-        ingredientes = request.POST['ingredientes']
-        modo_preparo = request.POST['modo_preparo']
-        tempo_preparo = request.POST['tempo_preparo']
-        rendimento = request.POST['rendimento']
-        categoria = request.POST['categoria']
+    if request.user.is_authenticated:
+        if request.method=='POST':
+            nome_prato = request.POST['nome_prato']
+            ingredientes = request.POST['ingredientes']
+            modo_preparo = request.POST['modo_preparo']
+            tempo_preparo = request.POST['tempo_preparo']
+            rendimento = request.POST['rendimento']
+            categoria = request.POST['categoria']
+            foto_prato = request.FILES['foto_prato']
+           
+            user = get_object_or_404(User,pk=request.user.id)
 
-        if not nome_prato: 
-            print('O campo nome não pode ficar em branco')
-            return redirect('cria_prato')
-        
-        if not ingredientes: 
-            print('O campo nome não pode ficar em branco')
-            return redirect('cria_prato')
-        
-        if not modo_preparo: 
-            print('O campo nome não pode ficar em branco')
-            return redirect('cria_prato')
-        
-        if not tempo_preparo: 
-            print('O campo nome não pode ficar em branco')
-            return redirect('cria_prato')
-        
-        if not rendimento: 
-            print('O campo nome não pode ficar em branco')
-            return redirect('cria_prato')
-        
-        if not categoria: 
-            print('O campo nome não pode ficar em branco')
-            return redirect('cria_prato')
+            prato = Prato.objects.create(
+                pessoa=user,
+                nome_prato=nome_prato,
+                ingredientes=ingredientes,
+                modo_preparo=modo_preparo,
+                tempo_preparo=tempo_preparo,
+                rendimento=rendimento,
+                categoria=categoria,
+                foto_prato=foto_prato)
+            prato.save()
 
+            print('Prato criado com sucesso')
+            return redirect('dashboard')  
 
-    return render(request,'cria_prato.html')
+        return render(request,'cria_prato.html')  
+             
+    print('Você não tem permissão!')
+    return redirect('index')
+
+     
