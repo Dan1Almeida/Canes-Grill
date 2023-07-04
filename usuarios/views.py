@@ -55,7 +55,8 @@ def cadastro(request):
 def login(request):
 
     if request.method=='POST':
-
+        print('Entrou em Login')
+        
         email=request.POST['email']
         senha=request.POST['senha']
 
@@ -101,6 +102,7 @@ def logout(request):
 def cria_prato(request):
     if request.user.is_authenticated:
         if request.method=='POST':
+            print(f'\n{request.POST["nome_prato"]}')
             nome_prato = request.POST['nome_prato']
             ingredientes = request.POST['ingredientes']
             modo_preparo = request.POST['modo_preparo']
@@ -122,12 +124,69 @@ def cria_prato(request):
                 foto_prato=foto_prato)
             prato.save()
 
-            print('Prato criado com sucesso')
+            messages.success(request,'Prato criado com sucesso')
             return redirect('dashboard')  
 
         return render(request,'cria_prato.html')  
              
-    print('Você não tem permissão!')
+    messages.error(request,'Você não tem permissão!')
     return redirect('index')
 
      
+def deleta_prato(request, prato_id):
+    # print(f'Entrou em DELETA_PRATO {prato_id} ')
+    try:
+        prato = get_object_or_404(Prato, pk=prato_id)
+        prato.delete()
+        messages.success(request, f"O prato '{prato.nome_prato}' apagado com sucesso")
+    except:
+        messages.error(request, "Prato não Encontrado")
+
+    return redirect('dashboard')
+
+def edita_prato(request, prato_id):
+    try:
+        prato = get_object_or_404(Prato, pk=prato_id)  
+    except:
+        messages.error(request, "Prato não Encontrado")
+
+    contexto = {
+        'prato': prato,
+    } 
+
+    return render(request, 'edita_prato.html', contexto)
+
+
+def atualiza_prato(request):
+    if request.user.is_authenticated:
+        if request.method=='POST':
+            # print(f'\n{request.POST["nome_prato"]}')
+            prato_id = request.POST['prato_id']
+            nome_prato = request.POST['nome_prato']
+            ingredientes = request.POST['ingredientes']
+            modo_preparo = request.POST['modo_preparo']
+            tempo_preparo = request.POST['tempo_preparo']
+            rendimento = request.POST['rendimento']
+            categoria = request.POST['categoria']
+            # foto_prato = request.FILES['foto_prato']
+        
+            prato = Prato.objects.get(pk=prato_id)
+
+            prato.nome_prato=nome_prato,
+            prato.ingredientes=ingredientes,
+            prato.modo_preparo=modo_preparo,
+            prato.tempo_preparo=tempo_preparo,
+            prato.rendimento=rendimento,
+            prato.categoria=categoria,
+            if 'foto_prato' in request.FILES:
+                prato.foto_prato=request.FILES['foto_prato']
+
+            prato.save()
+
+            messages.success('Prato atualizado com sucesso')
+            return redirect('dashboard')  
+
+        return render(request,'atualiza_prato.html')  
+             
+    messages.error(request,'Você não tem permissão!')
+    return redirect('index')

@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'churras',
-    'pessoas',
+    # 'pessoas',
     'usuarios',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -146,5 +146,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
-    messages.SUCCESS: 'sucess'
+    messages.SUCCESS: 'success',
 }

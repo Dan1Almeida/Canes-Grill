@@ -5,58 +5,64 @@
 {% block titulo%} Dashboard {% endblock %}
 
 {% block conteudo %}
+
     <!-- ##### Contact Form Area Start -->
 <div class="contact-area section-padding-0-80">
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="section-heading">
-                    <h3>Criar Prato, {{ user.username }}</h3>
+                    <h3>Edite seu Prato, {{ user.username }}</h3>
                 </div> 
             </div>
         </div>
         <div class="row">
             <div class="col-12">
                 <div class="contact-form-area">
-                    <form action="{% url 'cria_prato' %}" method="post" enctype="multipart/form-data">
+                    <form action="{% url 'atualiza_prato' %}" method="post" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-12 col-lg-12">
                                 {% csrf_token %}
                                 <label for="nome_prato"><b>Nome do Prato</b></label>
-                                <input type="text" id="nome_prato" class="form-control" name="nome_prato" placeholder="Nome do Prato" >
+                                <input type="hidden" name="prato_id" value = "{{prato.id}}" >
+                                <input type="text" id="nome_prato" class="form-control" name="nome_prato" placeholder="Nome do Prato" value="{{prato.nome_prato}}">
                             </div>
                             <div class="col-12 col-lg-12">
                                 <label for="ingredientes"><b>Ingredientes</b></label>
-                                <textarea class="form-control" name="ingredientes" id="ingredientes" cols="30" rows="10" placeholder="ex. Maminha, &#10; 3 limões, &#10; Sal e Tempero"  ></textarea>
+                                <textarea class="form-control" name="ingredientes" id="ingredientes" cols="30" rows="10" placeholder="ex. Maminha, &#10; 3 limões, &#10; Sal e Tempero"  > {{prato.ingredientes}}" </textarea>
                             </div>
                             <div class="col-12 col-lg-12">
                                 <label for="modo_preparo"><b>Modo Preparo</b></label>
-                                <textarea class="form-control" name="modo_preparo" id="modo_preparo" cols="30" rows="10" placeholder="ex. Corte Saboroso, Tempero com limão, sal e diversos temperos, marinando para obter o máximo da suculência" required ></textarea>
+                                <textarea class="form-control" name="modo_preparo" id="modo_preparo" cols="30" rows="10" placeholder="ex. Corte Saboroso, Tempero com limão, sal e diversos temperos, marinando para obter o máximo da suculência"> {{prato.modo_preparo}} </textarea>
                             </div>
-                            <div class="col-12 col-lg-3">
+                            <div class="col-12 col-lg-4">
                                 <label for="tempo_preparo"><b>Tempo de Preparo (Min)</b></label>
-                                <input type="number" id="tempo_preparo" class="form-control" name="tempo_preparo" placeholder="ex. 2" >
+                                <input type="number" id="tempo_preparo" class="form-control" name="tempo_preparo" placeholder="ex. 2" value="{{prato.tempo_preparo}}">
                             </div>
-                            <div class="col-12 col-lg-3">
+                            <div class="col-12 col-lg-4">
                                 <label for="rendimento"><b>Rendimento (Por Pessoas)</b></label>
-                                <input type="text" id="rendimento" class="form-control" name="rendimento" placeholder="ex. 3 " >
+                                <input type="text" id="rendimento" class="form-control" name="rendimento" placeholder="ex. 3 "value="{{prato.rendimento}}">
                             </div>
-                            <div class="col-12 col-lg-3">
+                            <div class="col-12 col-lg-4">
                                 <label for="categoria"><b>Categoria</b></label>
-                                <input type="text" id="categoria" class="form-control" name="categoria" placeholder="ex. Churrasco" >
+                                <input type="text" id="categoria" class="form-control" name="categoria" placeholder="ex. Churrasco" value="{{prato.categoria}}">
                             </div>
                             <div class="col-12 col-lg-3">
-                                <label for="foto_prato"><b>Foto do Prato</b></label>
-                                <input type="file" id="foto_prato" class="form-control" name="foto_prato" required>
+                                <label for="foto_prato"><b>Foto utilizada</b></label>
+                                <img src="{{prato.foto_prato.url}}" alt="">
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                <label for="foto_prato"><b>Alterar Foto</b></label>
+                                <input type="file" id="foto_prato" class="form-control" name="foto_prato" >
                             </div>
 
 
                             <div class="col-12 text-center">
                                 <button type="submit" class="btn btn-success">
-                                    Criar Seu Prato
+                                    Edite Seu Prato
                                 </button>
                                 <button type="button" class="btn btn-danger" style="background-color: red;" onclick="cancelar();">
-                                    Cancelar Prato
+                                    Cancelar Edição
                                 </button>
                             </div>
                         </div>
