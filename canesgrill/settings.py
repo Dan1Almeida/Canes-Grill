@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-51fem7a5io66*7qckztm$w_4o1w8bv95u+7j-2jy)!%kf96ke8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['canesgrill-daniel.onrender.com']
 
 
 # Application definition
@@ -136,7 +136,7 @@ USE_TZ = True
 
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATIC_URL = 'static/'
+STATIC_URL = 'staticfiles/'
 STATICFILES_DIRS = [
     BASE_DIR / 'templates/static',
 
