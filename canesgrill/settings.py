@@ -79,11 +79,11 @@ WSGI_APPLICATION = 'canesgrill.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'uGQOTCuSSQascZXeOmtv',
-        'HOST': 'containers-us-west-64.railway.app',   # Or an IP Address that your DB is hosted on
-        'PORT': '7793',
+        'NAME': 'db_churras_yvr3',
+        'USER': 'admin',
+        'PASSWORD': 'qx4zAnAMnzF6HLpCAcMRaWmvn0gKIsFw',
+        'HOST': 'dpg-cik9aqh5rnuvtgulmhjg-a.oregon-postgres.render.com',   # Or an IP Address that your DB is hosted on
+        'PORT': '5432',
     }
 }
 #DATABASES = {
