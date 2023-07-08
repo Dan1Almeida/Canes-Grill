@@ -19,7 +19,7 @@ def index(request):
     } # o que lista o prato
 
 
-    return render(request, 'churrasco.html', contexto)
+    return render(request, 'index.html', contexto)
 
 
 def churrasco(request, prato_id):
